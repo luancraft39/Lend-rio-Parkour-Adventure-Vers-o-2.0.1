@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0043)https://www.lncc.br/~borges/php/testar.html -->
-<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>LendÃ¡rio Parkour - MULTIPLAYER MUNDIAL</title>
 
-<title>Lendário Parkour - MULTIPLAYER MUNDIAL</title>
-
-<script src="./Lendário Parkour Adventure versão 2.0.1_files/socket.io.min.js.baixados"></script>
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 
 <style>
 body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -28,7 +28,6 @@ button:hover { background: #ff007f; color: white; transform: scale(1.05);}
 
 #info { position: absolute; top: 10px; left: 10px; color: black; font-weight: bold; background: rgba(255,255,255,0.7); padding: 5px 10px; border-radius: 5px; z-index: 5;}
 
-/* &#128172; CHAT GLOBAL */
 #chat-container {
     position: absolute; bottom: 20px; left: 20px; width: 320px; height: 250px;
     background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px);
@@ -51,48 +50,48 @@ button:hover { background: #ff007f; color: white; transform: scale(1.05);}
 
 <body>
 
-<audio id="music" loop="">
+<audio id="music" loop>
     <source src="https://media.vocaroo.com/mp3/1iOle3gRKpTl" type="audio/mpeg">
 </audio>
 
 <div id="loading">
-    LENDÁRIO PARKOUR ADVENTURE
+    LENDÃRIO PARKOUR ADVENTURE
     <br><small style="font-size: 20px; color: #aaa;">Conectando ao mundo online...</small>
 </div>
 
 <div id="menu">
-    <h1>Lendário Parkour Adventure</h1>
+    <h1>LendÃ¡rio Parkour Adventure</h1>
     <p>Escolha seu personagem para entrar no mundo Aberto!</p>
     <div>
-        <button onclick="startGame(&#39;boy&#39;)">Menino (Azul)</button>
-        <button onclick="startGame(&#39;girl&#39;)">Menina (Rosa)</button>
+        <button onclick="startGame('boy')">Menino (Azul)</button>
+        <button onclick="startGame('girl')">Menina (Rosa)</button>
     </div>
 </div>
 
 <div id="death">
-    &#9760;&#65039; VOCÊ CAIU!
+    â˜ ï¸ VOCÃŠ CAIU!
     <div>
         <button onclick="continueGame()">Renascer</button>
         <button onclick="goMenu()">Menu Principal</button>
     </div>
 </div>
 
-<div id="info">PC: A/D = andar | ESPAÇO = pular</div>
+<div id="info">PC: A/D = andar | ESPAÃ‡O = pular</div>
 
-<canvas id="game" width="1319" height="657"></canvas>
+<canvas id="game"></canvas>
 
 <div id="chat-container">
     <div id="chat-messages"></div>
     <div id="chat-input-area">
-        <input type="text" id="chat-input" placeholder="Diga olá para o mundo..." autocomplete="off">
+        <input type="text" id="chat-input" placeholder="Diga olÃ¡ para o mundo..." autocomplete="off">
         <button id="chat-send" onclick="sendChatMessage()">Enviar</button>
     </div>
 </div>
 
 <div id="mobileControls">
-    <button id="left">&#11013;&#65039;</button>
-    <button id="jump">&#128640;</button>
-    <button id="right">&#10145;&#65039;</button>
+    <button id="left">â¬…ï¸</button>
+    <button id="jump">ðŸš€</button>
+    <button id="right">âž¡ï¸</button>
 </div>
 
 <script>
@@ -105,10 +104,9 @@ canvas.height = window.innerHeight;
 const music = document.getElementById("music");
 document.addEventListener("click", () => { music.play().catch(()=>{}); });
 
-// --- &#127760; MULTIPLAYER (LENDÁRIO SERVER) ---
-// &#9888;&#65039; PASSO IMPORTANTE: Quando você criar o servidor no Glitch.com, 
-// coloque o link dele aqui embaixo no lugar de 'http://localhost:3000'!
-const socket = io('http://localhost:3000'); 
+// --- ðŸŒ MULTIPLAYER (LENDÃRIO SERVER) ---
+// SEU LINK DO RENDER JÃ ESTÃ APLICADO AQUI ABAIXO:
+const socket = io('https://lend-rio-parkour-adventure-vers-o-2-0-1.onrender.com'); 
 
 let otherPlayers = {}; 
 
@@ -147,7 +145,7 @@ socket.on('currentPlayers', (serverPlayers) => {
 
 socket.on('newPlayer', (playerData) => {
     otherPlayers[playerData.id] = playerData;
-    addSystemMessage("Alguém entrou no jogo!");
+    addSystemMessage("AlguÃ©m entrou no jogo!");
 });
 
 socket.on('playerMoved', (playerData) => {
@@ -156,7 +154,7 @@ socket.on('playerMoved', (playerData) => {
 
 socket.on('playerDisconnected', (id) => {
     delete otherPlayers[id];
-    addSystemMessage("Alguém saiu do jogo.");
+    addSystemMessage("AlguÃ©m saiu do jogo.");
 });
 
 socket.on('newMessage', (msg) => {
@@ -249,7 +247,6 @@ function update() {
 
     cameraX = player.x - canvas.width / 3;
 
-    // Avisa o Servidor que você andou
     if (moved || player.vx !== 0 || player.vy !== 0) {
         socket.emit('playerMovement', { x: player.x, y: player.y, type: player.type });
     }
@@ -290,13 +287,11 @@ function draw() {
         ctx.fillRect(p.x, p.y, p.w, p.h);
     }
 
-    // Desenha outros jogadores do mundo
     Object.keys(otherPlayers).forEach((id) => {
         drawCharacter(otherPlayers[id], "Player", false);
     });
 
-    // Desenha Você
-    drawCharacter(player, "Você", true);
+    drawCharacter(player, "VocÃª", true);
 
     ctx.restore();
 }
@@ -306,7 +301,6 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-// --- &#128172; CHAT ---
 const chatInput = document.getElementById("chat-input");
 const chatMessages = document.getElementById("chat-messages");
 
@@ -322,7 +316,7 @@ function sendChatMessage() {
 function addMessage(sender, text, isMe) {
     const msgDiv = document.createElement("div");
     msgDiv.className = "message";
-    msgDiv.innerHTML = `<span class="sender" style="color:${isMe ? '#ff007f' : '#00f0ff'}">${isMe ? "Você" : "Mundo"}:</span> ${text}`;
+    msgDiv.innerHTML = `<span class="sender" style="color:${isMe ? '#ff007f' : '#00f0ff'}">${isMe ? "VocÃª" : "Mundo"}:</span> ${text}`;
     chatMessages.appendChild(msgDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
@@ -336,7 +330,6 @@ function addSystemMessage(text) {
 
 chatInput.addEventListener("keypress", (e) => { if (e.key === "Enter") sendChatMessage(); });
 
-// Controles de celular
 let isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 if (isMobile) {
     document.getElementById("mobileControls").style.display = "flex";
@@ -356,5 +349,5 @@ jumpBtn.ontouchstart = (e) => { e.preventDefault(); keys[" "] = true; }
 jumpBtn.ontouchend = () => { keys[" "] = false; }
 </script>
 
-
-		</body></html>
+</body>
+</html>
